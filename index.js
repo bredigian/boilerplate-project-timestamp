@@ -34,18 +34,17 @@ app.get("/api", function (req, res) {
 app.get("/api/:date", function (req, res) {
   const { date } = req.params
 
-  const isMilliseconds = !isNaN(date)
+  let parsedDate
 
-  const regex =
-    /^(19[7-9]\d|20\d{2}|2[1-9]\d{2}|[3-9]\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/
-  const isDateFormat = regex.test(date)
+  if (!date) {
+    parsedDate = new Date()
+  } else {
+    parsedDate = new Date(date)
+  }
 
-  if (!isMilliseconds && !isDateFormat)
-    return res.status(400).json({ error: "Invalid Date" })
+  if (isNaN(parsedDate.getTime())) return res.json({ error: "Invalid Date" })
 
-  const objectDate = new Date(isMilliseconds ? Number(date) : date)
-
-  res.json({ unix: objectDate.getTime(), utc: objectDate.toUTCString() })
+  res.json({ unix: parsedDate.getTime(), utc: parsedDate.toUTCString() })
 })
 
 // Listen on port set in environment variable or default to 3000
