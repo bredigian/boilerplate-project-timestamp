@@ -26,13 +26,13 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: "hello API" })
 })
 
+app.get("/api", function (req, res) {
+  const now = new Date()
+  res.json({ unix: now.getTime(), utc: now.toUTCString() })
+})
+
 app.get("/api/:date", function (req, res) {
   const { date } = req.params
-
-  if (!date) {
-    const now = new Date()
-    return res.json({ unix: now.getTime(), utc: now.toUTCString() })
-  }
 
   const isMilliseconds = !isNaN(date)
 
